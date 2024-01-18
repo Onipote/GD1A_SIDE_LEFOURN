@@ -13,6 +13,9 @@ public class ControlsCharacter : MonoBehaviour
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
     [SerializeField] private KeyCode jumpKeyController = KeyCode.Joystick1Button0;
 
+    [SerializeField] private int maxHealth = 100;
+    private int currentHealth = 100;
+
     [SerializeField] private Rigidbody2D rgbd;
     [SerializeField] private BoxCollider2D boxCharacter;
     private bool isTouching;
@@ -20,10 +23,9 @@ public class ControlsCharacter : MonoBehaviour
     void Start()
     {
         groundMask = LayerMask.GetMask("Ground");
+        currentHealth = maxHealth;
     }
-
-    // Update is called once per frame
-    void Update()
+    void Update() // Update is called once per frame
     {
         if (Input.GetKey(leftKey) || Input.GetKey(leftKey1) || Input.GetAxis("Horizontal")<0)
         {
