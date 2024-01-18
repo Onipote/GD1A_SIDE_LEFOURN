@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class ControlsCharacter : MonoBehaviour
 {
-    [SerializeField] private KeyCode leftKey = KeyCode.A, rightKey = KeyCode.D, jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode leftKey = KeyCode.A;
+    [SerializeField] private KeyCode leftKey1 = KeyCode.LeftArrow;
+
+    [SerializeField] private KeyCode rightKey = KeyCode.D;
+    [SerializeField] private KeyCode rightKey1 = KeyCode.RightArrow;
+
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode jumpKeyController = KeyCode.Joystick1Button0;
+
     [SerializeField] private Rigidbody2D rgbd;
-    private bool isTouching;
     [SerializeField] private BoxCollider2D boxCharacter;
+    private bool isTouching;
     private int groundMask;
     void Start()
     {
@@ -17,15 +25,15 @@ public class ControlsCharacter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(leftKey))
+        if (Input.GetKey(leftKey) || Input.GetKey(leftKey1) || Input.GetAxis("Horizontal")<0)
         {
             rgbd.AddForce(Vector2.left * 5);
         }
-        if (Input.GetKey(rightKey))
+        if (Input.GetKey(rightKey) || Input.GetKey(rightKey1) || Input.GetAxis("Horizontal")>0)
         {
             rgbd.AddForce(Vector2.right * 5);
         }
-        if (boxCharacter.IsTouchingLayers(groundMask) && Input.GetKeyDown(jumpKey))
+        if (boxCharacter.IsTouchingLayers(groundMask) && (Input.GetKeyDown(jumpKey) || Input.GetKeyDown(jumpKeyController)))
         {
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
         }
