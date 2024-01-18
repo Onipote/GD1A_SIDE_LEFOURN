@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "GD1A_SIDE_LEFOURN_Elsa.sln"
+    "dotnet.defaultSolution": "GD1A_SIDE_LEFOURN.sln"
 }
