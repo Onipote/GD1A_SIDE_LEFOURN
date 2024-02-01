@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 718665877}
   - component: {fileID: 718665879}
   - component: {fileID: 718665878}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Wall_Jump_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1279,7 +1279,7 @@ GameObject:
   - component: {fileID: 1573418920}
   - component: {fileID: 1573418922}
   - component: {fileID: 1573418921}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Wall_Jump_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1411,6 +1411,7 @@ GameObject:
   - component: {fileID: 1886299860}
   - component: {fileID: 1886299859}
   - component: {fileID: 1886299863}
+  - component: {fileID: 1886299864}
   m_Layer: 3
   m_Name: Character
   m_TagString: Untagged
@@ -1551,7 +1552,7 @@ Transform:
   m_GameObject: {fileID: 1886299858}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.36, y: -2.38, z: 0}
+  m_LocalPosition: {x: 6.11, y: -3.26, z: 0}
   m_LocalScale: {x: 0.6519028, y: 1.5107, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1577,9 +1578,45 @@ MonoBehaviour:
   jumpKeyController: 350
   rgbd: {fileID: 1886299860}
   boxCharacter: {fileID: 1886299859}
+  boxCharacter2: {fileID: 1886299864}
   Traps:
     serializedVersion: 2
     m_Bits: 128
+--- !u!58 &1886299864
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886299858}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.26155254, y: -0.09576475}
+  serializedVersion: 2
+  m_Radius: 0.21612597
 --- !u!1 &1895312276
 GameObject:
   m_ObjectHideFlags: 0

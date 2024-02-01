@@ -17,10 +17,12 @@ public class ControlsCharacter : MonoBehaviour
     //Autres
     [SerializeField] private Rigidbody2D rgbd;
     [SerializeField] private BoxCollider2D boxCharacter;
+    [SerializeField] private CircleCollider2D boxCharacter2;
     private bool isTouchingLayers;
     private int characterMask;
     private int groundMask;
     private int waterMask;
+    private int wallMask;
     [SerializeField] private LayerMask Traps;
 
     /*//Barre de vie (pas fini)
@@ -36,6 +38,7 @@ public class ControlsCharacter : MonoBehaviour
         characterMask = LayerMask.GetMask("Character");
         groundMask = LayerMask.GetMask("Ground");
         waterMask = LayerMask.GetMask("Water");
+        wallMask = 8;
 
         /*currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);*/
@@ -55,7 +58,13 @@ public class ControlsCharacter : MonoBehaviour
         {
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
         }
-        
+        //Wall jump
+        if (boxCharacter2.IsTouchingLayers(wallMask) && Input.GetKeyDown(jumpKey) || Input.GetKeyDown(jumpKeyController))
+        {
+            rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+            rgbd.AddForce(Vector2.left * 5, ForceMode2D.Impulse);
+        }
+
         //Altération déplacement (résistance de l'eau)
         if (boxCharacter.IsTouchingLayers(waterMask))
         {
