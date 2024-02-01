@@ -51,18 +51,18 @@ public class ControlsCharacter : MonoBehaviour
         {
             rgbd.AddForce(Vector2.right * 2);
         }
-        if (boxCharacter.IsTouchingLayers(groundMask) && (Input.GetKeyDown(jumpKey) || Input.GetKeyDown(jumpKeyController)))
+        if ((boxCharacter.IsTouchingLayers(groundMask)|| (boxCharacter.IsTouchingLayers(waterMask))) && (Input.GetKeyDown(jumpKey) || Input.GetKeyDown(jumpKeyController)))
         {
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
         }
-
+        
         //Altération déplacement (résistance de l'eau)
         if (boxCharacter.IsTouchingLayers(waterMask))
         {
-            rgbd.mass = 4;
+            rgbd.mass = 2;
             Debug.Log("touche l'eau");
         }
-        if (boxCharacter.IsTouchingLayers(groundMask))
+        if (boxCharacter.IsTouchingLayers(groundMask) && !(boxCharacter.IsTouchingLayers(waterMask)))
         {
             rgbd.mass = 1;
             Debug.Log("touche le sol");
@@ -72,7 +72,6 @@ public class ControlsCharacter : MonoBehaviour
         {
             rgbd.transform.position = startingPosition;
         }
-
         /*//Test TakeDamage
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -83,7 +82,7 @@ public class ControlsCharacter : MonoBehaviour
     {
         if(collision.IsTouchingLayers(characterMask))
         {
-            rgbd.velocity = new Vector3(1, 0, 0);
+            rgbd.velocity = new Vector2(0, 0);
             Debug.Log("ralentissement");
         }
     }
