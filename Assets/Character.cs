@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ControlsCharacter : MonoBehaviour
 {
-    //Contrôles
+    [Header("Contrôles Joueur")]
     [SerializeField] private KeyCode leftKey = KeyCode.A;
     [SerializeField] private KeyCode leftKey1 = KeyCode.LeftArrow;
 
@@ -14,21 +14,22 @@ public class ControlsCharacter : MonoBehaviour
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
     [SerializeField] private KeyCode jumpKeyController = KeyCode.Joystick1Button0;
 
-    //Autres
+    [Header("Colliders")]
     [SerializeField] private Rigidbody2D rgbd;
     [SerializeField] private BoxCollider2D boxCharacter;
-    [SerializeField] private CircleCollider2D boxCharacter2;
+    [SerializeField] private BoxCollider2D boxCharacterWall;
+
+    [Header("Layers")]
     private bool isTouchingLayers;
     private int characterMask;
     private int groundMask;
     private int waterMask;
-    private int wallMask;
+    [SerializeField] private LayerMask wallMask;
     [SerializeField] private LayerMask Traps;
+    [SerializeField] private LayerMask Enemy1;
 
-    /*//Barre de vie (pas fini)
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private int currentHealth;
-    private HealthBar healthBar;*/
+    [Header("Wall Jump System")]
+
 
     Vector3 startingPosition;
 
@@ -38,10 +39,6 @@ public class ControlsCharacter : MonoBehaviour
         characterMask = LayerMask.GetMask("Character");
         groundMask = LayerMask.GetMask("Ground");
         waterMask = LayerMask.GetMask("Water");
-        wallMask = 8;
-
-        /*currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);*/
     }
     void Update() // Update is called once per frame
     {
@@ -59,12 +56,11 @@ public class ControlsCharacter : MonoBehaviour
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
         }
         //Wall jump
-        if (boxCharacter2.IsTouchingLayers(wallMask) && Input.GetKeyDown(jumpKey) || Input.GetKeyDown(jumpKeyController))
+        if (boxCharacterWall.IsTouchingLayers(wallMask) && ((Input.GetKeyDown(jumpKey) && (Input.GetKey(leftKey) || Input.GetKey(rightKey))) || (Input.GetKeyDown(jumpKeyController) && (Input.GetKey(leftKey1) || Input.GetKey(rightKey1)))))
         {
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
-            rgbd.AddForce(Vector2.left * 5, ForceMode2D.Impulse);
+            Debug.Log("wall jump");
         }
-
         //Altération déplacement (résistance de l'eau)
         if (boxCharacter.IsTouchingLayers(waterMask))
         {
@@ -74,18 +70,13 @@ public class ControlsCharacter : MonoBehaviour
         if (boxCharacter.IsTouchingLayers(groundMask) && !(boxCharacter.IsTouchingLayers(waterMask)))
         {
             rgbd.mass = 1;
-            Debug.Log("touche le sol");
+            //Debug.Log("touche le sol");
         }
         //Obstacle causant la mort du joueur
         if (boxCharacter.IsTouchingLayers(Traps))
         {
             rgbd.transform.position = startingPosition;
         }
-        /*//Test TakeDamage
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            TakeDamage(25);
-        }*/
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -95,9 +86,4 @@ public class ControlsCharacter : MonoBehaviour
             Debug.Log("ralentissement");
         }
     }
-    /*void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        healthBar.SetHealth(currentHealth);
-    }*/
 }
