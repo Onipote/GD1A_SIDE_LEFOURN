@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 191.90002, y: -42.999985}
+  m_AnchoredPosition: {x: 191.90002, y: -43}
   m_SizeDelta: {x: 141.71, y: 22.03}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &79760929
@@ -1627,9 +1627,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!212 &1258632432
 SpriteRenderer:
@@ -1710,8 +1710,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c47beb864c022ff4fabf8410b0d32c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rgbd: {fileID: 1258632431}
-  boxEnemy: {fileID: 1258632430}
+  LimiteGauche: {fileID: 156826008}
+  LimiteDroite: {fileID: 432678125}
+  speed: 1
+  boxCharacter: {fileID: 1886299859}
+  hpSystem: {fileID: 1886299865}
 --- !u!1 &1313303899
 GameObject:
   m_ObjectHideFlags: 0
@@ -2202,7 +2205,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 148.48999, y: -44.569992}
+  m_AnchoredPosition: {x: 148.48999, y: -44.570007}
   m_SizeDelta: {x: 194.73, y: 58.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1772570096
@@ -2435,6 +2438,8 @@ MonoBehaviour:
   Enemy1:
     serializedVersion: 2
     m_Bits: 512
+  boxEnemy1: {fileID: 1258632430}
+  hpSystem: {fileID: 1886299865}
 --- !u!70 &1886299864
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

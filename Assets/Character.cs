@@ -27,6 +27,11 @@ public class ControlsCharacter : MonoBehaviour
     [SerializeField] private LayerMask wallMask;
     [SerializeField] private LayerMask Traps;
     [SerializeField] private LayerMask Enemy1;
+
+    [Header("Enemy1's link")]
+    [SerializeField] private BoxCollider2D boxEnemy1;
+    [SerializeField] PlayerHealth hpSystem;
+
     Vector3 startingPosition;
     void Start()
     {

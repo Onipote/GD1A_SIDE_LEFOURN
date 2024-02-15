@@ -11,18 +11,25 @@ public class Enemy1 : MonoBehaviour
     private bool isTouchingLayers;
     private int leftLimitMask;
     private int rightLimitMask;*/
+    [Header("Enemy1's part")]
     [SerializeField] private GameObject LimiteGauche;
     [SerializeField] private GameObject LimiteDroite;
     private Rigidbody2D rb;
     private Transform currentPoint;
     public float speed;
+    private int enemy1Mask;
 
+    [Header("Character's link")]
+    [SerializeField] private BoxCollider2D boxCharacter;
+    [SerializeField] PlayerHealth hpSystem;
     void Start()
     {
         /*leftLimitMask = LayerMask.GetMask("LeftLimit");
         rightLimitMask = LayerMask.GetMask("RightLimit");*/
         rb = GetComponent<Rigidbody2D>();
         currentPoint = LimiteDroite.transform;
+
+        enemy1Mask = LayerMask.GetMask("Enemy1");
     }
 
     void Update()
@@ -54,4 +61,11 @@ public class Enemy1 : MonoBehaviour
             currentPoint = LimiteDroite.transform;
         }
     }
+    /*void Attack()
+    {
+        if (boxCharacter.IsTouchingLayers(enemy1Mask))
+        {
+            health - 25;
+        }
+    }*/
 }
