@@ -15,8 +15,8 @@ TagManager:
   - InstantDeath
   - Wall
   - Enemy1
-  - 
-  - 
+  - LeftLimit
+  - RightLimit
   - 
   - 
   - 

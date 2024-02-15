@@ -27,12 +27,7 @@ public class ControlsCharacter : MonoBehaviour
     [SerializeField] private LayerMask wallMask;
     [SerializeField] private LayerMask Traps;
     [SerializeField] private LayerMask Enemy1;
-
-    [Header("Wall Jump System")]
-
-
     Vector3 startingPosition;
-
     void Start()
     {
         startingPosition = gameObject.transform.position;
@@ -45,24 +40,25 @@ public class ControlsCharacter : MonoBehaviour
         //Déplacements de base (droite, gauche, saut)
         if (Input.GetKey(leftKey) || Input.GetKey(leftKey1) || Input.GetAxis("Horizontal")<0)
         {
-            rgbd.AddForce(Vector2.left * 2);
+            rgbd.AddForce(Vector2.left * 1);
         }
         if (Input.GetKey(rightKey) || Input.GetKey(rightKey1) || Input.GetAxis("Horizontal")>0)
         {
-            rgbd.AddForce(Vector2.right * 2);
+            rgbd.AddForce(Vector2.right * 1);
         }
         if ((boxCharacter.IsTouchingLayers(groundMask)|| (boxCharacter.IsTouchingLayers(waterMask))) && (Input.GetKeyDown(jumpKey) || Input.GetKeyDown(jumpKeyController)))
         {
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
         }
+
         //Wall jump
-        if (boxCharacterWall.IsTouchingLayers(wallMask) && ((Input.GetKeyDown(jumpKey) && (Input.GetKey(leftKey) || Input.GetKey(rightKey))) || (Input.GetKeyDown(jumpKeyController) && (Input.GetKey(leftKey1) || Input.GetKey(rightKey1)))))
+        if (boxCharacterWall.IsTouchingLayers(wallMask) && (Input.GetKeyDown(jumpKey) && (Input.GetKey(leftKey)) || (Input.GetKeyDown(jumpKeyController) && (Input.GetKey(leftKey1) || Input.GetKey(rightKey1)))))
         {
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
             Debug.Log("wall jump");
         }
-        //Altération déplacement (résistance de l'eau)
-        if (boxCharacter.IsTouchingLayers(waterMask))
+            //Altération déplacement (résistance de l'eau)
+            if (boxCharacter.IsTouchingLayers(waterMask))
         {
             rgbd.mass = 2;
             Debug.Log("touche l'eau");
@@ -72,18 +68,18 @@ public class ControlsCharacter : MonoBehaviour
             rgbd.mass = 1;
             //Debug.Log("touche le sol");
         }
+
         //Obstacle causant la mort du joueur
         if (boxCharacter.IsTouchingLayers(Traps))
         {
             rgbd.transform.position = startingPosition;
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    /*PlayerHealth()
     {
-        if(collision.IsTouchingLayers(characterMask))
+        if (boxCharacter.IsTouchingLayers(Enemy1))
         {
-            rgbd.velocity = new Vector2(0, 0);
-            Debug.Log("ralentissement");
+             health -= (Random.Range(5, 10);
         }
-    }
+    }*/
 }
