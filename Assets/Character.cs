@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ControlsCharacter : MonoBehaviour
 {
@@ -28,17 +29,39 @@ public class ControlsCharacter : MonoBehaviour
     [SerializeField] private LayerMask Traps;
     [SerializeField] private LayerMask Enemy1;
 
-    [Header("Enemy1's link")]
-    [SerializeField] private BoxCollider2D boxEnemy1;
-    [SerializeField] PlayerHealth hpSystem;
+    public float walkSpeed;
+    private float moveInput;
+    public float jumpSpeed;
+    private bool isGrounded;
+
+    private bool isTouchingLeft;
+    private bool isTouchingRight;
+    private bool wallJumping;
+    private float touchingLeftOrRight;
+
+    [Header("HP System")]
+    //Jauge Points de vie (part 1)
+    public float health;
+    private float lerpTimer;
+    public float maxHealth = 100;
+    public float chipSpeed = 2f;
+    public Image frontHealthBar;
+    public Image backHealthBar;
+    private int healMask;
+
+    public BoxCollider2D snack;
 
     Vector3 startingPosition;
     void Start()
     {
         startingPosition = gameObject.transform.position;
+        rgbd.gameObject.GetComponent<Rigidbody2D>();
         characterMask = LayerMask.GetMask("Character");
         groundMask = LayerMask.GetMask("Ground");
         waterMask = LayerMask.GetMask("Water");
+        healMask = LayerMask.GetMask("Heal");
+
+        health = maxHealth;
     }
     void Update() // Update is called once per frame
     {
@@ -56,8 +79,56 @@ public class ControlsCharacter : MonoBehaviour
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
         }
 
+        //Obstacle causant la mort du joueur
+        if (boxCharacter.IsTouchingLayers(Traps))
+        {
+            rgbd.transform.position = startingPosition;
+        }
+
+        //TEST TUTO WALL JUMP (pas fini)
+        moveInput = Input.GetAxisRaw("Horizontal");
+
+        if ((!isTouchingLeft && !isTouchingRight) || isGrounded)
+        {
+            rgbd.velocity = new Vector2(moveInput * walkSpeed, rgbd.velocity.y);
+        }
+
+        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        {
+            rgbd.velocity = new Vector2(rgbd.velocity.x, jumpSpeed);
+        }
+
+        isGrounded = Physics2D.OverlapBox(new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - 0.5f),
+        new Vector2(0.9f, 0.2f), 0f, groundMask);
+
+        isTouchingLeft = Physics2D.OverlapBox(new Vector2(gameObject.transform.position.x - 0.5f, gameObject.transform.position.y - 0.5f),
+        new Vector2(0.9f, 0.2f), 0f, groundMask);
+
+        isTouchingRight = Physics2D.OverlapBox(new Vector2(gameObject.transform.position.x - 0.5f, gameObject.transform.position.y - 0.5f),
+        new Vector2(0.9f, 0.2f), 0f, groundMask);
+
+        if (isTouchingLeft)
+        {
+            touchingLeftOrRight = 1;
+
+        }
+        else if (isTouchingRight)
+        {
+            touchingLeftOrRight = -1;
+        }
+
+        if (Input.GetKeyDown(jumpKey) && ((isTouchingRight) || (isTouchingLeft)) && !isGrounded)
+        {
+            wallJumping = true;
+            Invoke("SetJumpingToFalse", 0.08f);
+        }
+
+        if (wallJumping)
+        {
+            rgbd.velocity = new Vector2(walkSpeed * touchingLeftOrRight, jumpSpeed);
+        }
         //Wall jump
-        if (boxCharacterWall.IsTouchingLayers(wallMask) && (Input.GetKeyDown(jumpKey) && (Input.GetKey(leftKey)) || (Input.GetKeyDown(jumpKeyController) && (Input.GetKey(leftKey1) || Input.GetKey(rightKey1)))))
+        /*if (boxCharacterWall.IsTouchingLayers(wallMask) && (Input.GetKeyDown(jumpKey) && (Input.GetKey(leftKey)) || (Input.GetKeyDown(jumpKeyController) && (Input.GetKey(leftKey1) || Input.GetKey(rightKey1)))))
         {
             rgbd.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
             Debug.Log("wall jump");
@@ -72,14 +143,68 @@ public class ControlsCharacter : MonoBehaviour
         {
             rgbd.mass = 1;
             //Debug.Log("touche le sol");
-        }
+        }*/
 
-        //Obstacle causant la mort du joueur
-        if (boxCharacter.IsTouchingLayers(Traps))
+        //Jauge Points de vie (part 1)
+        health = Mathf.Clamp(health, 0, maxHealth);
+        UpdateHealthUI();
+    }
+
+    //Jauge Points de vie (part 2)
+    public void UpdateHealthUI()
+    {
+        Debug.Log(health);
+        float fillF = frontHealthBar.fillAmount;
+        float fillB = backHealthBar.fillAmount;
+        float hFraction = health / maxHealth;
+        if (fillB > hFraction)
         {
-            rgbd.transform.position = startingPosition;
+            frontHealthBar.fillAmount = hFraction;
+            backHealthBar.color = Color.red;
+            lerpTimer += Time.deltaTime;
+            float percentComplete = lerpTimer / chipSpeed;
+            percentComplete = percentComplete * percentComplete;
+            backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete);
+        }
+        if (fillF < hFraction)
+        {
+            backHealthBar.color = Color.green;
+            backHealthBar.fillAmount = hFraction;
+            lerpTimer += Time.deltaTime;
+            float percentComplete = lerpTimer / chipSpeed;
+            percentComplete = percentComplete * percentComplete;
+            frontHealthBar.fillAmount = Mathf.Lerp(fillF, hFraction, percentComplete);
         }
     }
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        lerpTimer = 0f;
+    }
+    public void RestoreHealth(float healAmount)
+    {
+        health += healAmount;
+        lerpTimer = 0f;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (boxCharacter.IsTouchingLayers(3))
+        {
+            Destroy(snack.gameObject);
+        }
+        if (boxCharacter.IsTouchingLayers(Enemy1))
+        {
+            TakeDamage(25);
+            Debug.Log("a pris des degats");
+        }
+        if (boxCharacter.IsTouchingLayers(healMask))
+        {
+            RestoreHealth(10);
+        }
+
+    }
+}
     /*PlayerHealth()
     {
         if (boxCharacter.IsTouchingLayers(Enemy1))
@@ -87,4 +212,3 @@ public class ControlsCharacter : MonoBehaviour
              health -= (Random.Range(5, 10);
         }
     }*/
-}
